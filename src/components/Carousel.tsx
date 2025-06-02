@@ -44,7 +44,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({ src, alt, width, 
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    setError(false); 
+    setError(false);
   }, [src]);
 
   if (error) {
@@ -83,7 +83,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({ src, alt, width, 
       onError={() => setError(true)}
       data-ai-hint={dataAiHint}
       priority={priority}
-      unoptimized={src.startsWith('https://placehold.co')} 
+      unoptimized={src.startsWith('https://placehold.co')}
     />
   );
 };
@@ -94,7 +94,7 @@ const Carousel: React.FC = () => {
   const [action, setAction] = useState<'next' | 'prev' | null>(null);
   const runTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const runNextAutoRef = useRef<NodeJS.Timeout | null>(null);
-  const [animationKey, setAnimationKey] = useState(0); // For resetting timer animation
+  const [animationKey, setAnimationKey] = useState(0);
 
   const showSlider = useCallback((type: 'next' | 'prev') => {
     setSlides(prevSlides => {
@@ -116,12 +116,12 @@ const Carousel: React.FC = () => {
   }, []);
 
   const handleNext = useCallback(() => {
-    if (action) return; 
+    if (action) return;
     showSlider('next');
   }, [showSlider, action]);
 
   const handlePrev = useCallback(() => {
-    if (action) return; 
+    if (action) return;
     showSlider('prev');
   }, [showSlider, action]);
 
@@ -132,16 +132,14 @@ const Carousel: React.FC = () => {
       handleNext();
     }, TIME_AUTO_NEXT);
 
-    setAnimationKey(prevKey => prevKey + 1); // Reset timer animation
+    setAnimationKey(prevKey => prevKey + 1);
 
     return () => {
-      // Crucially, only clear the timeout set by *this* effect instance (runNextAutoRef)
-      // Do NOT clear runTimeoutRef here, as it's managed by showSlider
       if (runNextAutoRef.current) {
         clearTimeout(runNextAutoRef.current);
       }
     };
-  }, [slides, handleNext]); // handleNext dependency is important for re-subscribing when action changes
+  }, [slides, handleNext]);
 
   const orderedThumbnails = slides.length > 1 ? [...slides.slice(1), slides[0]] : slides;
 
@@ -157,10 +155,10 @@ const Carousel: React.FC = () => {
             <ImageWithFallback
               src={slide.imageSrc}
               alt={`Slide ${slide.id} - ${slide.topic}`}
-              width={1920} 
+              width={1920}
               height={1080}
               dataAiHint={slide.dataAiHint}
-              priority={index === 0 && !action} 
+              priority={index === 0 && !action}
             />
             <div className="content">
               <div className="author">{slide.author}</div>
@@ -169,7 +167,6 @@ const Carousel: React.FC = () => {
               <div className="des">{slide.des}</div>
               <div className="buttons">
                 <button>SEE MORE</button>
-                <button>SUBSCRIBE</button>
               </div>
             </div>
           </div>
