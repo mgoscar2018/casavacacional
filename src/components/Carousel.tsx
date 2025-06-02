@@ -4,8 +4,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 
-const TIME_RUNNING = 3000;
-const TIME_AUTO_NEXT = 7000;
+const TIME_RUNNING = 3000; // Duration of slide transition animation
+const TIME_AUTO_NEXT = 14000; // Interval for auto advancing slides (14 seconds)
 
 interface Slide {
   id: string;
@@ -44,7 +44,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({ src, alt, width, 
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    setError(false); // Reset error state if src changes
+    setError(false); 
   }, [src]);
 
   if (error) {
@@ -83,7 +83,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({ src, alt, width, 
       onError={() => setError(true)}
       data-ai-hint={dataAiHint}
       priority={priority}
-      unoptimized={src.startsWith('https://placehold.co')} // No need to optimize placeholders
+      unoptimized={src.startsWith('https://placehold.co')} 
     />
   );
 };
@@ -94,6 +94,7 @@ const Carousel: React.FC = () => {
   const [action, setAction] = useState<'next' | 'prev' | null>(null);
   const runTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const runNextAutoRef = useRef<NodeJS.Timeout | null>(null);
+  const [animationKey, setAnimationKey] = useState(0); // For resetting timer animation
 
   const showSlider = useCallback((type: 'next' | 'prev') => {
     setSlides(prevSlides => {
@@ -115,26 +116,32 @@ const Carousel: React.FC = () => {
   }, []);
 
   const handleNext = useCallback(() => {
-    if (action) return; // Prevent multiple clicks while animation is running
+    if (action) return; 
     showSlider('next');
   }, [showSlider, action]);
 
   const handlePrev = useCallback(() => {
-    if (action) return; // Prevent multiple clicks while animation is running
+    if (action) return; 
     showSlider('prev');
   }, [showSlider, action]);
 
   useEffect(() => {
     if (runNextAutoRef.current) clearTimeout(runNextAutoRef.current);
+    
     runNextAutoRef.current = setTimeout(() => {
       handleNext();
     }, TIME_AUTO_NEXT);
 
+    setAnimationKey(prevKey => prevKey + 1); // Reset timer animation
+
     return () => {
-      if (runTimeoutRef.current) clearTimeout(runTimeoutRef.current);
-      if (runNextAutoRef.current) clearTimeout(runNextAutoRef.current);
+      // Crucially, only clear the timeout set by *this* effect instance (runNextAutoRef)
+      // Do NOT clear runTimeoutRef here, as it's managed by showSlider
+      if (runNextAutoRef.current) {
+        clearTimeout(runNextAutoRef.current);
+      }
     };
-  }, [slides, handleNext]);
+  }, [slides, handleNext]); // handleNext dependency is important for re-subscribing when action changes
 
   const orderedThumbnails = slides.length > 1 ? [...slides.slice(1), slides[0]] : slides;
 
@@ -153,7 +160,7 @@ const Carousel: React.FC = () => {
               width={1920} 
               height={1080}
               dataAiHint={slide.dataAiHint}
-              priority={slide.id === initialSlidesData[0].id && !action} // Priority for the very first image loaded
+              priority={index === 0 && !action} 
             />
             <div className="content">
               <div className="author">{slide.author}</div>
@@ -193,11 +200,9 @@ const Carousel: React.FC = () => {
         <button id="next" onClick={handleNext} disabled={!!action}>&gt;</button>
       </div>
 
-      <div className="time"></div>
+      <div className="time" key={animationKey}></div>
     </div>
   );
 };
 
 export default Carousel;
-
-    

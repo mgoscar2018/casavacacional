@@ -82,14 +82,12 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* Styles from example style.css */
     margin: 0;
     font-family: 'Poppins', sans-serif;
     font-size: 12px;
   }
 }
 
-/* Content from user's style.css, adapted for Next.js context */
 a{
     text-decoration: none;
 }
@@ -104,10 +102,9 @@ header{
     z-index: 100;
 }
 header a{
-    color: #eee; /* Should be var(--foreground) or specific if needed */
+    color: hsl(var(--foreground));
     margin-right: 40px;
 }
-/* carousel */
 .carousel{
     height: 100vh;
     margin-top: -50px;
@@ -135,7 +132,7 @@ header a{
     transform: translateX(-50%);
     padding-right: 30%;
     box-sizing: border-box;
-    color: #fff; /* Should be var(--foreground) or specific */
+    color: hsl(var(--foreground));
     text-shadow: 0 5px 10px #0004;
 }
 .carousel .list .item .author{
@@ -149,7 +146,7 @@ header a{
     line-height: 1.3em;
 }
 .carousel .list .item .topic{
-    color: #f1683a; /* var(--accent) */
+    color: hsl(var(--accent));
 }
 .carousel .list .item .buttons{
     display: grid;
@@ -160,19 +157,18 @@ header a{
 }
 .carousel .list .item .buttons button{
     border: none;
-    background-color: #eee; /* var(--foreground) or primary */
+    background-color: hsl(var(--primary));
     letter-spacing: 3px;
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
-    color: #000; /* var(--background) or primary-foreground */
+    color: hsl(var(--primary-foreground));
     cursor: pointer;
 }
 .carousel .list .item .buttons button:nth-child(2){
     background-color: transparent;
-    border: 1px solid #fff; /* var(--foreground) or primary */
-    color: #eee; /* var(--foreground) or primary */
+    border: 1px solid hsl(var(--primary));
+    color: hsl(var(--primary));
 }
-/* thumbail */
 .thumbnail{
     position: absolute;
     bottom: 50px;
@@ -189,14 +185,14 @@ header a{
     position: relative;
 }
 .thumbnail .item img,
-.thumbnail .item > div[style*="background-color"] /* For fallback */ {
+.thumbnail .item > div[style*="background-color"] {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 20px;
 }
 .thumbnail .item .content{
-    color: #fff; /* var(--foreground) */
+    color: hsl(var(--foreground));
     position: absolute;
     bottom: 10px;
     left: 10px;
@@ -208,7 +204,6 @@ header a{
 .thumbnail .item .content .description{
     font-weight: 300;
 }
-/* arrows */
 .arrows{
     position: absolute;
     top: 80%;
@@ -226,23 +221,20 @@ header a{
     border-radius: 50%;
     background-color: #eee4;
     border: none;
-    color: #fff; /* var(--foreground) */
+    color: hsl(var(--foreground));
     font-family: monospace;
     font-weight: bold;
     transition: .5s;
     cursor: pointer;
 }
 .arrows button:hover{
-    background-color: #fff; /* var(--foreground) or primary */
-    color: #000; /* var(--background) or primary-foreground */
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
 }
 
-/* animation */
 .carousel .list .item:nth-child(1){
     z-index: 1;
 }
-
-/* animation text in first item */
 
 .carousel .list .item:nth-child(1) .content .author,
 .carousel .list .item:nth-child(1) .content .title,
@@ -274,9 +266,8 @@ header a{
 .carousel .list .item:nth-child(1) .content .buttons{
     animation-delay: 1.8s!important;
 }
-/* create animation when next click */
 .carousel.next .list .item:nth-child(1) img,
-.carousel.next .list .item:nth-child(1) > div[style*="background-color"] /* For fallback */ {
+.carousel.next .list .item:nth-child(1) > div[style*="background-color"] {
     width: 150px;
     height: 220px;
     position: absolute;
@@ -300,7 +291,7 @@ header a{
     animation: showThumbnail .5s linear 1 forwards;
 }
 .carousel.prev .list .item img,
-.carousel.prev .list .item > div[style*="background-color"] /* For fallback */ {
+.carousel.prev .list .item > div[style*="background-color"] {
     z-index: 100;
 }
 @keyframes showThumbnail{
@@ -319,36 +310,32 @@ header a{
     }
 }
 
-/* running time */
-
 .carousel .time{
     position: absolute;
     z-index: 1000;
-    width: 0%;
+    width: 100%; 
     height: 3px;
-    background-color: #f1683a; /* var(--accent) */
+    background-color: hsl(var(--accent)); 
     left: 0;
     top: 0;
+    animation-name: runningTime;
+    animation-duration: 14s; 
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
 }
 
-.carousel.next .time,
-.carousel.prev .time{
-    animation: runningTime 3s linear 1 forwards;
-}
 @keyframes runningTime{
-    from{ width: 100%}
-    to{width: 0}
+    from{ width: 100%; }
+    to{ width: 0%; }
 }
 
-
-/* prev click */
 
 .carousel.prev .list .item:nth-child(2){
     z-index: 2;
 }
 
 .carousel.prev .list .item:nth-child(2) img,
-.carousel.prev .list .item:nth-child(2) > div[style*="background-color"] /* For fallback */ {
+.carousel.prev .list .item:nth-child(2) > div[style*="background-color"] {
     animation: outFrame 0.5s linear 1 forwards;
     position: absolute;
     bottom: 0;
@@ -397,5 +384,3 @@ header a{
         font-size: 30px;
     }
 }
-
-    
